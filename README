@@ -8,3 +8,22 @@ go to http://localhost:9000/admin/communities and create a community
 
 
 when you are ready go to http://localhost:9000/ and select a community.
+
+
+
+
+
+
+
+
+
+
+
+--- BEFORE COMMIT
+
+run this command
+
+play clean social-trading
+git add *
+git commit -m 'initial commit'
+git push origin master
