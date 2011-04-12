@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title:'Social Trading' /}
+
+
+<h2>Social Trading</h2>
+
+<p>please select a community :</p>
+
+#{list items:communities, as:'community'}
+<li><a href="./community/${community.name}">${community.name}</a></li>
+#{/list}
+ 

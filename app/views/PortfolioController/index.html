@@ -1,0 +1,59 @@
+#{extends 'main.html' /}
+#{set title:'edit a portofolio' /}
+
+
+<h2>Portfolio ${portfolio.name}</h2>
+
+<p>Advalaible funds : 9,800 $</p>
+
+ 
+<table>
+<thead>
+	<tr>
+	<th>Symbol</th>
+	<th>Avg. price</th>
+	<th>Last price</th>
+    <th>Quantity</th>
+	</tr>
+</thead>
+ <tbody>
+ 
+#{list items:portfolio.potfoliosEntries, as:'entry'}
+<tr>
+	<th>${entry.symbol}</th>
+	<th>${entry.averagePrice}</th>
+	<th>${entry.lastPrice}</th>
+	<th>${entry.quantity}</th>
+</tr>
+#{/list}
+ </tbody>
+</table>
+<input type="button" value="Discard all changes"/><input type="button" value="Confirm & Save"/>
+
+ 
+<h2>Add symbol</h2>
+
+<input type="text" id="AddSymbolInputText" size="10"/><input type="button" id="AddSymbolInputButton" value="Add"/>
+
+ <script type="text/javascript" charset="utf-8">
+ 
+	$('#AddSymbolInputButton').click(function(){
+ 		$.post('@{addPortfolioEntry()}',
+ 				{
+ 			symbol: $('#AddSymbolInputText').val(),
+ 			portfolioId: ${portfolio.id}
+ 				}, 
+ 				function(entry){$('tbody').append(
+ 					' <tr><th>'+entry.symbol+'</th>' +
+ 					'<th>'+entry.averagePrice+'</th>' +
+ 					'<th>'+entry.lastPrice+'</th>' +
+ 					'<th>'+entry.quantity+'</th>  </tr>' 
+ 					)
+ 		}, 'json')
+
+	})
+ </script>
+ <br/>
+ <br/>
+ <a href="/community/${portfolio.community.name}">back to ${portfolio.community.name}</a>
+ 

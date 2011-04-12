@@ -1,0 +1,28 @@
+#{extends 'main.html' /}
+#{set title:'Social Trading' /}
+
+
+<h1>${community.name}</h1>
+
+<h2>portfolios in community :</h2>
+
+#{list items:community.portfolios, as:'portfolio'}
+<li><a href="/community/${community.name}/edit/${portfolio.name}">${portfolio.name}</a></li>
+#{/list}
+
+<h2>Add Porfolio</h2>
+
+
+<form action="@{CommunityController.addPortofolio()}" method="POST">
+		#{if flash.error}
+			<div id="addError">
+				${flash.error}
+			</div>
+		#{/if}
+
+<input type="hidden" name="communityName" id="communityName" value="${community.name}"/>
+<input type="text" name="name" id="name" size="10"/><input type="submit" id="AddPortfolioInputButton" value="Add"/>
+</form>
+
+
+
