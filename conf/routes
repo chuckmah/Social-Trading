@@ -7,12 +7,15 @@
 
 #Community
 GET     /                               Application.index
+GET     /yaml/{communityName}           Application.yaml
 GET     /community/{communityName}      CommunityController.index
 
 #Portfolio
-GET     /community/{communityName}/edit/{portfolioName}  PortfolioController.index
+GET     /community/{communityName}/portfolio/{portfolioName}  PortfolioController.index
+GET     /community/{communityName}/edit/{portfolioName}  PortfolioController.edit
 
-
+#Quote
+GET     /community/{communityName}/quote/{quoteName}  PortfolioController.index
 
 # Import the default CRUD routes
 *			/admin						module:crud

@@ -1,28 +1,127 @@
-#{extends 'main.html' /}
-#{set title:'Social Trading' /}
+#{extends 'main.html' /} #{set title:'Social Trading' /} #{set
+'moreScripts'}
+<script src="@{'/public/javascripts/jquery.yql.js'}"
+	type="text/javascript" charset="utf-8"></script>
+<script src="@{'/public/javascripts/jquery.dataTables.js'}"
+	type="text/javascript" charset="utf-8"></script>
+<script src="@{'/public/javascripts/datatables.fnAddTr.js'}"
+	type="text/javascript" charset="utf-8"></script>
+<script src="@{'/public/javascripts/portfolio.js'}"
+	type="text/javascript" charset="utf-8"></script>
+#{/set} #{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen"
+	href="@{'/public/stylesheets/portfolioTable.css'}">
+#{/set}
+
+<h1>${community.name} trading community</h1>
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen"
+	href="@{'/public/stylesheets/portfolioTable.css'}">
+#{/set}
+
+<h2>Portfolios</h2>
 
 
-<h1>${community.name}</h1>
+<table class='porfolioTable' id='porfolioStatsTableId'>
+	<thead>
+		<tr>
+			<th>Porfolio Name</th>
+			<th>stocks quantity</th>
+			<th>total of transactions</th>
+			<th>Total value ($)</th>
+			<th>Change % (since creation)</th>
+			<th>Creation date</th>
+		</tr>
+	</thead>
+	<tbody>
 
-<h2>portfolios in community :</h2>
+		#{list items:community.portfolios, as:'portfolio'}
+		<tr porfolioId='${portfolio.id}'>
+			<td><a
+				href="/community/${community.name}/edit/${portfolio.name}">${portfolio.name}</a>
+			</td>
+			<td>${portfolio.stats.entriesTotal}</td>
+			<td>${portfolio.stats.transactionTotal}</td>
+			<td>${portfolio.stats.marketValue}</td>
+			<td>${portfolio.stats.marketValueChange}</td>
+			<td>${portfolio.creationDate}</td>
+		</tr>
+		#{/list}
 
-#{list items:community.portfolios, as:'portfolio'}
-<li><a href="/community/${community.name}/edit/${portfolio.name}">${portfolio.name}</a></li>
-#{/list}
-
-<h2>Add Porfolio</h2>
+	</tbody>
+</table>
 
 
-<form action="@{CommunityController.addPortofolio()}" method="POST">
+
+<h2>Stocks</h2>
+
+<table class='porfolioTable' id='stockStatsTableId'>
+	<thead>
+		<tr>
+			<th>Symbol</th>
+			<th># of porfolios</th>
+			<th field='LastTradePriceOnly'>Price</th>
+			<th field='PreviousClose'>PreviousClose</th>
+			<th field='ChangeinPercent'>Change %</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		#{list items:quotes, as:'quote'}
+		<tr symbol='${quote.symbol}' quoteId='${quote.id}'>
+			<td>${quote.symbol}</td>
+			<td>${quote.stats.totalOccurence}</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		#{/list}
+
+	</tbody>
+</table>
+
+
+<h2>Comments</h2>
+
+<p>Number of entries : <label id="totalComment">${community.comments.size()}</label></p>
+
+
+
+<form action="@{addComment}" method="POST">
 		#{if flash.error}
 			<div id="addError">
 				${flash.error}
 			</div>
 		#{/if}
+<textarea name=comment id="commentTextAreaId" rows="2" cols="100" ></textarea>
+<br/>
+<input type="button" id="clearCommentButtonId" value="Clear"/><input type="submit" id="submitCommentButtonId" value="Post"/>
+</form>		
 
-<input type="hidden" name="communityName" id="communityName" value="${community.name}"/>
-<input type="text" name="name" id="name" size="10"/><input type="submit" id="AddPortfolioInputButton" value="Add"/>
-</form>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
 
+		//watch quote table
+		var oTable = $('#stockStatsTableId').dataTable({
+			"bFilter" : false,
+			"bPaginate" : true,
+			"aaSorting" : [ [ 1, "desc" ] ],
+			"bSort" : true,
+			"bInfo" : true
+		});
 
+		refreshQuotePrice();
+	});
 
+	function refreshQuotePrice() {
+		//refresh each 15 sec.
+		refreshTable("stockStatsTableId");
+
+		setInterval(function() {
+			refreshTable("stockStatsTableId");
+
+		}, 15000);
+	}
+
+ </script>
