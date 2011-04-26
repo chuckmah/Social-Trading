@@ -1,6 +1,8 @@
 package webapp;
 
 import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,6 +12,9 @@ import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.test.Fixtures;
+import services.CommunityServices;
+import services.PortofolioStatServices;
+import services.QuoteServices;
 import sun.util.logging.resources.logging;
 
 @OnApplicationStart
@@ -22,22 +27,11 @@ public class Bootsrap extends Job {
         if(Community.count() == 0) {
             String fileName = "data.yml";
             Fixtures.load(fileName);
-       /*     InputStream is = Play.classloader.getResourceAsStream(fileName);
-            if (is == null) {
-                throw new RuntimeException("Cannot load fixture " + fileName + ", the file was not found");
-            }
-            Yaml yaml = new Yaml();
-
             
-            for (Object data : yaml.loadAll(is)) {
-
-                	Logger.info("importing yaml file community name = " + data);
-                	Community community = (Community) data;
-                	community.save();
-                
-
-            }*/
+            
             
         }
+        
+    	CommunityServices.updateCommunities();
     }
 }

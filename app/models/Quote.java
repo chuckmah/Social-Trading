@@ -27,9 +27,6 @@ public class Quote extends Model {
 	
 	public BigDecimal marketPrice;
 	
-    @OneToOne(cascade = CascadeType.ALL, mappedBy="quote", fetch=FetchType.LAZY)
-    public QuoteStat stats;
-	
 	public Quote(){
 	}
 	

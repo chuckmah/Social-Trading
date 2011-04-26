@@ -15,7 +15,7 @@ GET     /community/{communityName}/portfolio/{portfolioName}  PortfolioControlle
 GET     /community/{communityName}/edit/{portfolioName}  PortfolioController.edit
 
 #Quote
-GET     /community/{communityName}/quote/{quoteName}  PortfolioController.index
+GET     /community/{communityName}/quote/{quoteSymbol}  CommunityQuoteController.index
 
 # Import the default CRUD routes
 *			/admin						module:crud

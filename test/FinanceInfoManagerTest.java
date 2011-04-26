@@ -1,11 +1,12 @@
 import org.junit.*;
 
-import controllers.financeinfo.FinanceInfo;
-import controllers.financeinfo.FinanceInfoManager;
-import controllers.financeinfo.QuoteInfo;
+
 
 import java.util.*;
 import play.test.*;
+import services.financeInfo.FinanceInfo;
+import services.financeInfo.FinanceInfoManager;
+import services.financeInfo.QuoteInfo;
 import models.*;
 
 public class FinanceInfoManagerTest extends UnitTest {

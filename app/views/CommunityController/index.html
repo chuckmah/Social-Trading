@@ -20,6 +20,10 @@
 	href="@{'/public/stylesheets/portfolioTable.css'}">
 #{/set}
 
+
+<p>last update : ${community.lastUpdate} </label></p>
+
+
 <h2>Portfolios</h2>
 
 
@@ -39,7 +43,7 @@
 		#{list items:community.portfolios, as:'portfolio'}
 		<tr porfolioId='${portfolio.id}'>
 			<td><a
-				href="/community/${community.name}/edit/${portfolio.name}">${portfolio.name}</a>
+				href="/community/${community.name}/portfolio/${portfolio.name}">${portfolio.name}</a>
 			</td>
 			<td>${portfolio.stats.entriesTotal}</td>
 			<td>${portfolio.stats.transactionTotal}</td>
@@ -61,6 +65,7 @@
 		<tr>
 			<th>Symbol</th>
 			<th># of porfolios</th>
+			<th># of transactions</th>
 			<th field='LastTradePriceOnly'>Price</th>
 			<th field='PreviousClose'>PreviousClose</th>
 			<th field='ChangeinPercent'>Change %</th>
@@ -68,10 +73,12 @@
 	</thead>
 	<tbody>
 
-		#{list items:quotes, as:'quote'}
-		<tr symbol='${quote.symbol}' quoteId='${quote.id}'>
-			<td>${quote.symbol}</td>
-			<td>${quote.stats.totalOccurence}</td>
+		#{list items:community.communityQuotes, as:'communityQuote'}
+		<tr symbol='${communityQuote.quote.symbol}' quoteId='${communityQuote.id}'>
+			<td><a
+				href="/community/${community.name}/quote/${communityQuote.quote.symbol}">${communityQuote.quote.symbol}</td>
+			<td>${communityQuote.portfolioEntries.size()}</td>
+			<td>${communityQuote.portfolioTransactions.size()}</td>
 			<td></td>
 			<td></td>
 			<td></td>
@@ -83,7 +90,7 @@
 
 
 <h2>Comments</h2>
-
+*{<!-- 
 <p>Number of entries : <label id="totalComment">${community.comments.size()}</label></p>
 
 
@@ -98,7 +105,7 @@
 <br/>
 <input type="button" id="clearCommentButtonId" value="Clear"/><input type="submit" id="submitCommentButtonId" value="Post"/>
 </form>		
-
+ -->}*
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 

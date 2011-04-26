@@ -14,7 +14,6 @@ public class PortfolioStat extends Model {
 	@OneToOne
 	public Portfolio portfolio;
 	
-	
 	public BigDecimal marketValue;
 	
 	public String marketValueChange;

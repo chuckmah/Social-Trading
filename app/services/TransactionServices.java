@@ -1,4 +1,4 @@
-package controllers;
+package services;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -7,31 +7,34 @@ import java.util.Date;
 
 import play.mvc.Controller;
 
+import models.CommunityQuote;
 import models.Portfolio;
 import models.PortfolioEntry;
 import models.Quote;
 import models.PorfolioTransaction;
 
-public class TransactionsController{
+public class TransactionServices{
 
 	
-	public static PorfolioTransaction executeBuyTransaction(Portfolio portfolio, Quote quote, int qty){
+	public static PorfolioTransaction executeBuyTransaction(Portfolio portfolio, CommunityQuote communityquote, int qty){
 
-		BigDecimal transactionPrice =  quote.marketPrice.multiply(new BigDecimal(qty));
+		BigDecimal marketPrice = communityquote.quote.marketPrice;
+		
+		BigDecimal transactionPrice =  marketPrice.multiply(new BigDecimal(qty));
 		BigDecimal newBalance = portfolio.balance.subtract(transactionPrice);
 
-		PorfolioTransaction transaction = new PorfolioTransaction(portfolio,quote,transactionPrice,new Date(),"Buy");
+		PorfolioTransaction transaction = new PorfolioTransaction(portfolio,communityquote,marketPrice, qty,new Date(),"Buy");
 
 		portfolio.addTransaction(transaction);
 		
 		portfolio.balance = newBalance;
 	
 
-		PortfolioEntry position =  portfolio.getPosition(quote);
+		PortfolioEntry position =  portfolio.getPortfolioEntryBySymbol(communityquote.quote.symbol);
 		
 		if(position == null){
-			position = new PortfolioEntry(quote,portfolio);
-			position.averagePrice = quote.marketPrice;
+			position = new PortfolioEntry(communityquote,portfolio);
+			position.averagePrice = communityquote.quote.marketPrice;
 			position.shareQty = qty;
 			portfolio.addPortfolioEntry(position);
 		}else{
@@ -51,18 +54,20 @@ public class TransactionsController{
 	}
 
 	public static PorfolioTransaction executeSellTransaction(Portfolio portfolio,
-			Quote quote, int qty) {
+			CommunityQuote communityquote, int qty) {
 		
-		BigDecimal transactionPrice =  quote.marketPrice.multiply(new BigDecimal(qty));
+		BigDecimal marketPrice = communityquote.quote.marketPrice;
+		
+		BigDecimal transactionPrice =  marketPrice.multiply(new BigDecimal(qty));
 		BigDecimal newBalance = portfolio.balance.add(transactionPrice);
 		
-		PorfolioTransaction transaction = new PorfolioTransaction(portfolio,quote,transactionPrice,new Date(),"Sell");
+		PorfolioTransaction transaction = new PorfolioTransaction(portfolio,communityquote,marketPrice,qty,new Date(),"Sell");
 
 		portfolio.addTransaction(transaction);
 		
 		portfolio.balance = newBalance;
 		
-		PortfolioEntry position =  portfolio.getPosition(quote);
+		PortfolioEntry position =  portfolio.getPortfolioEntryBySymbol(communityquote.quote.symbol);
 		
 		int sharesOwned = position.shareQty;
 		

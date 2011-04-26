@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
@@ -18,10 +19,15 @@ public class PorfolioTransaction extends Model {
 	
 	@Required
 	@ManyToOne
-	public Quote quote;
+	public CommunityQuote communityQuote;
+	
+
 	
 	@Required
-	public BigDecimal amount;
+	public int qty;
+	
+	@Required
+	public BigDecimal unitPrice;
 	
 	@Required
 	public Date executionDate;
@@ -33,12 +39,18 @@ public class PorfolioTransaction extends Model {
 		
 	}
 	
-	public PorfolioTransaction(Portfolio portfolio, Quote quote, BigDecimal amount , Date executionDate, String type){
+	
+	public PorfolioTransaction(Portfolio portfolio, CommunityQuote communityQuote ,BigDecimal unitPrice,int qty,  Date executionDate, String type){
 		this.portfolio = portfolio;
-		this.quote = quote;
-		this.amount = amount;
+		this.communityQuote = communityQuote;
+		this.qty = qty;
+		this.unitPrice = unitPrice;
 		this.executionDate = executionDate;
 		this.type = type;
+	}
+	
+	public BigDecimal getAmount(){
+		return unitPrice.multiply(new BigDecimal(qty));
 	}
 	
 }

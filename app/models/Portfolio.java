@@ -96,11 +96,11 @@ public class Portfolio extends Model {
 		transactions.add(transaction);
 	}
 	
-	public PortfolioEntry getPosition(Quote quote){
+	public PortfolioEntry getPortfolioEntryBySymbol(String quote){
 		PortfolioEntry position = null;
 		
 		for(PortfolioEntry existingPositions : portfolioEntries) {
-			if(existingPositions.quote.symbol.equals(quote.symbol)){
+			if(existingPositions.communityQuote.quote.symbol.equals(quote)){
 				position = existingPositions;
 			}
 			
@@ -113,7 +113,7 @@ public class Portfolio extends Model {
 			portfolioEntries = new ArrayList<PortfolioEntry>();
 		}else{
 			for (PortfolioEntry existingPositions : portfolioEntries) {
-				if(existingPositions.quote.symbol.equals(position.quote.symbol)){
+				if(existingPositions.communityQuote.quote.symbol.equals(position.communityQuote.quote.symbol)){
 					return false;
 				}
 			}

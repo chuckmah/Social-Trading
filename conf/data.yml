@@ -1,5 +1,5 @@
 
-Community(id1):
+Community(test):
  name: "test"
  startingBalance: 10000
 
@@ -44,12 +44,27 @@ Quote(tsla):
  symbol: "TSLA"
  companyName: "Tesla Motors, Inc"
  marketPrice: 25.19
+
+
+#CommunityQuote
+
+CommunityQuote(test_cmk_to):
+ quote: cmk_to
+ community: test
+
+CommunityQuote(test_yhoo):
+ quote: yhoo  
+ community: test
  
+CommunityQuote(test_nlr):
+ quote: nlr  
+ community: test
+
 #Portfolios A 
  
 Portfolio(testuser_a_portfolio):
  name: "testuser_a"
- community : id1
+ community : test
  balance: 9650
  creationDate: 2011-04-19
  watchQuotes: [goog,cmk_to]
@@ -57,21 +72,23 @@ Portfolio(testuser_a_portfolio):
 PortfolioEntry(testuser_a_entry1):
  portfolio: testuser_a_portfolio
  averagePrice: 3.50
- quote: cmk_to
+ communityQuote: test_cmk_to
  shareQty: 100
 
 PorfolioTransaction(testuser_a_transaction1):
  portfolio: testuser_a_portfolio
- amount: 350.00
+ qty: 100
+ unitPrice: 3.50
  executionDate: 2011-04-19T17:45:48.959Z
- quote: cmk_to
+ communityQuote: test_cmk_to
  type: "Buy"
+
 
 #Portfolios B
 
 Portfolio(testuser_b_portfolio):
  name: "testuser_b"
- community : id1
+ community : test
  balance: 178
  creationDate: 2011-04-19
  watchQuotes: [yhoo, nlr,intl,ort-a_v,tsla]
@@ -79,25 +96,27 @@ Portfolio(testuser_b_portfolio):
 PortfolioEntry(testuser_b_entry1):
  portfolio: testuser_b_portfolio
  averagePrice: 16
- quote: yhoo
+ communityQuote: test_yhoo
  shareQty: 200
 
 PortfolioEntry(testuser_b_entry2):
  portfolio: testuser_b_portfolio
  averagePrice: 22
- quote: nlr
+ communityQuote: test_nlr
  shareQty: 301
 
 PorfolioTransaction(testuser_b_transaction1):
  portfolio: testuser_b_portfolio
- amount: 3200
+ qty: 200
+ unitPrice: 16
  executionDate: 2011-04-19T18:08:49.200Z
- quote: yhoo
+ communityQuote: test_yhoo
  type: "Buy" 
  
 PorfolioTransaction(testuser_b_transaction2):
  portfolio: testuser_b_portfolio
- amount: 6622
+ qty: 301
+ unitPrice: 22
  executionDate: 2011-04-19T18:09:25.771Z
- quote: nlr
+ communityQuote: test_nlr
  type: "Buy" 

@@ -1,11 +1,14 @@
 package models;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.UniqueConstraint;
 
 import play.data.validation.Required;
@@ -23,8 +26,13 @@ public class Community extends Model{
     @OneToMany(cascade=CascadeType.ALL, mappedBy="community")
 	public List<Portfolio> portfolios;
 	
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="community")
-    public List<Comment> comments;
+    public Date lastUpdate;
+    
+//    @OneToMany(cascade=CascadeType.ALL, mappedBy="community")
+//    public List<Comment> comments;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="community", fetch=FetchType.LAZY)
+    public  List<CommunityQuote> communityQuotes;
     
     public static Community findByName(String name){
     	return Community.find("select c from Community c where c.name = ?"  , name).first();

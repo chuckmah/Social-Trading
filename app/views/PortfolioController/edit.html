@@ -1,0 +1,317 @@
+#{extends 'main.html' /}
+#{set title:'edit a portofolio' /}
+
+#{set 'moreScripts'} 
+<script src="@{'/public/javascripts/jquery.yql.js'}" type="text/javascript" charset="utf-8"></script>
+<script src="@{'/public/javascripts/jquery.dataTables.js'}" type="text/javascript" charset="utf-8"></script>
+<script src="@{'/public/javascripts/datatables.fnAddTr.js'}" type="text/javascript" charset="utf-8"></script>
+<script src="@{'/public/javascripts/portfolio.js'}" type="text/javascript" charset="utf-8"></script>
+#{/set} 
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/portfolioTable.css'}">
+#{/set} 
+
+<h2>Portfolio ${portfolio.name}</h2>
+
+<a href="/community/${portfolio.community.name}"> << back to ${portfolio.community.name}</a>
+<br/>
+
+ 
+<h3>Watch list</h3>
+
+ 
+<table class='porfolioTable' id='porfolioTableId'>
+<thead>
+	<tr>
+	<th >Symbol</th>
+	<th >Company Name</th>
+	<th field='LastTradePriceOnly'>Price</th>
+	<th field='PreviousClose'>Previous Close</th>
+	<th field='ChangeinPercent'>Change (%)</th>
+	<th field='MarketCapitalization'>Market Capitalization</th>
+	<th field='Volume'>Volume</th>
+	</tr>
+</thead>
+<tbody>
+ 
+
+ 
+#{list items:portfolio.watchQuotes, as:'quote'}
+<tr symbol='${quote.symbol}' quoteid='${quote.id}'>
+	<td>${quote.symbol}</td>
+	<td>${quote.companyName}</td>
+	<td>0.0</td>
+	<td>0.0</td>
+	<td>0.0</td>
+	<td>0.0</td>
+	<td>0.0</td>
+</tr>
+#{/list}
+ </tbody>
+</table>
+
+
+<input type="text" id="addporfolioTableInputText" size="10" maxlength="10"/>
+<input type="button" id="addporfolioTableInputButton" value="Add"/>
+<input type="button" id="deleteporfolioTableButton" value="Delete"/>
+<input type="button" id="refreshporfolioTableButton" value="Refresh"/>
+
+<h3>Postions</h3>
+<p>Actual Portfolio Value : <label id="porfolioWorthLabelId"></label></p>
+
+<table class='porfolioTable' id='positionsTableId'>
+<thead>
+	<tr>
+	<th>Symbol</th>
+	<th>Company Name</th>
+	<th>Average Price</th>
+	<th field='LastTradePriceOnly'>Last Price</th>
+	<th>Change (%)</th>
+	<th># of shares</th>
+	<th>Total ($)</th>
+	</tr>
+</thead>
+<tbody>
+
+#{list items:portfolio.portfolioEntries, as:'portfolioEntry'}
+<tr symbol='${portfolioEntry.communityQuote.quote.symbol}' positionId='${portfolioEntry.id}'>
+	<td>${portfolioEntry.communityQuote.quote.symbol}</td>
+	<td>${portfolioEntry.communityQuote.quote.companyName}</td>
+	<td dynamic='averagePrice'>${portfolioEntry.averagePrice}</td>
+	<td dynamic='positionLastPrice'></td>
+	<td dynamic='positionChange'>0.0</td>
+	<td dynamic='positionQty'>${portfolioEntry.shareQty}</td>
+	<td dynamic='positionTotal'>0.00</td>
+</tr>
+#{/list}
+</tbody>
+</table>
+<input type="button" id="refreshPositionsTableButton" value="Refresh"/>
+ 
+<h3>Transaction</h3>
+<p>Buying power : ${portfolio.balance} $</label></p>
+
+<form action="@{addTransaction}" method="POST">
+		#{if flash.error}
+			<div id="addError">
+				${flash.error}
+			</div>
+		#{/if}
+
+<input type="hidden" name="portfolioId" id="portfolioIdInputHidden" value=${portfolio.id} />
+<label for='transactionSymbolInputText'>Symbol : </label> <input type="text"  name="symbol"  id="transactionSymbolInputText" size="10" maxlength="10"/>
+<label for='transactionQtyInputText'>Quantity : </label> <input type="text" name="quantity" id="transactionQtyInputText" size="10" maxlength="10"/>
+<label for='transactionTypeSelect'>Type : </label>
+<select  name="type" id="transactionTypeSelect"  >
+	 <option value="Buy">Buy</option>
+	 <option value="Sell">Sell</option>
+</select>
+<input type="submit" id="AddPortfolioInputButton" value="Execute"/>
+</form>
+<h3>Transactions history </h3>
+ 
+ <table class='porfolioTable' id='transactionsTableId'>
+<thead>
+	<tr>
+	<th>Date</th>
+	<th>Symbol</th>
+	<th>Type</th>
+	<th>Quantity</th>
+	<th>unit price</th>
+	<th>total price</th>
+	</tr>
+</thead>
+<tbody>
+
+#{list items:portfolio.transactions, as:'transaction'}
+<tr>
+	<td>${transaction.executionDate}</td>
+	<td>${transaction.communityQuote.quote.symbol}</td>
+	<td>${transaction.type}</td>
+	<td>${transaction.qty}</td>
+	<td>${transaction.unitPrice}</td>
+	<td>${transaction.getAmount()}</td>
+</tr>
+#{/list}
+</tbody>
+ </table>
+ 
+
+ 
+ 
+ <script  type="text/javascript" charset="utf-8">
+ $(document).ready(function() {
+
+	 
+	   //transactions table
+	   var oTable =	$('#transactionsTableId').dataTable({
+			"bFilter": false,
+			"bPaginate": true,
+			"aaSorting": [[ 0, "desc" ]],
+			"bSort": true,
+			"bInfo": true
+		} );
+	   
+	 
+	   //watch quote table
+	   var oTable =	$('#porfolioTableId').dataTable({
+			"bFilter": false,
+			"bPaginate": false,
+			"bSort": false,
+			"bInfo": false
+		} );
+	 
+		$('#deleteporfolioTableButton').click(function(){		
+				var anSelected = fnGetSelected( oTable );
+	 			var portfolioId	= $('#portfolioIdInputHidden').val();	
+				removeWatchQuote(oTable,$(anSelected[0]).attr('quoteid'),portfolioId);		
+		});
+	 
+		$("#porfolioTableId tbody").click(function(event) {
+			$(oTable.fnSettings().aoData).each(function (){
+				$(this.nTr).removeClass('row_selected');
+			});
+			$(event.target.parentNode).addClass('row_selected');
+		});
+	 
+		$('#addporfolioTableInputButton').click(function(){
+			var quote = $('#addporfolioTableInputText').val();
+ 			var portfolioId	= $('#portfolioIdInputHidden').val();	
+ 			addWatchQuote(oTable,quote,portfolioId);
+		});
+	
+		$('#refreshporfolioTableButton').click(function(){		
+			refreshTable("porfolioTableId");
+		});
+
+
+		
+		$('#refreshPositionsTableButton').click(function(){		
+			refreshPositions();
+		});
+
+		
+		refreshWatchQuote();
+		
+		refreshPositions();
+});
+ 
+ function refreshPositions(){
+		//refresh each 15 sec.
+		refreshTable("positionsTableId",function(){
+			upatePositionsTableDynamicField();
+		});
+
+		
+		setInterval(function() {
+			refreshTable("positionsTableId",function(){
+				upatePositionsTableDynamicField();
+			});
+		}, 15000);
+	} 
+
+function upatePositionsTableDynamicField(){
+	
+	var portfolioValue = 0;
+	
+	$('#positionsTableId tbody tr').each(function() {
+
+		
+		var price = parseFloat($(this).children("td[dynamic='positionLastPrice']").html());
+		var averagePrice = parseFloat($(this).children("td[dynamic='averagePrice']").html());
+		var qty = parseFloat($(this).children("td[dynamic='positionQty']").html());
+		//set the change %
+		
+		
+		var change = ((price - averagePrice)/averagePrice) *100;
+		change = change.toFixed(2);
+		
+		
+		//positionChange
+		if(averagePrice > price){
+			$(this).children("td[dynamic='positionChange']").html(change+'%');
+		}else if(averagePrice < price){
+
+			$(this).children("td[dynamic='positionChange']").html('+'+change+'%');
+		}else{
+			$(this).children("td[dynamic='positionChange']").html('0%');
+		}
+		
+		//Total $
+		var total = qty*price;
+		total = total.toFixed(2);
+		$(this).children("td[dynamic='positionTotal']").html(total+'$');
+		
+		
+		portfolioValue  = parseFloat(portfolioValue) + parseFloat(total);
+
+	});
+	
+	portfolioValue = portfolioValue.toFixed(2);
+	$("#porfolioWorthLabelId").html(portfolioValue+"$");
+}
+ 
+function refreshWatchQuote(){
+	//refresh each 15 sec.
+	refreshTable("porfolioTableId");
+
+	
+	setInterval(function() {
+		refreshTable("porfolioTableId");
+		
+	}, 15000);
+} 
+ 
+ 
+function addWatchQuote(oTable,quote,portfolioId) {
+
+	$.ajax({
+		type: "post",
+		url: "@{addQuoteToWatch()}",
+		dataType : "text json",
+		data: {
+ 			'symbol'		: quote,
+ 			'portfolioId'	: portfolioId
+ 		},
+ 		error: function(xhr, ajaxOptions, thrownError){ 
+
+				alert(xhr.responseText);
+		},
+ 		success: function(data){
+
+ 				var dataJSON = jQuery.parseJSON( data );
+ 				
+ 				 var row = '<tr symbol="'+dataJSON.symbol+'" quoteid="'+dataJSON.id+'"><td>'+dataJSON.symbol+'</td><td>'+dataJSON.companyName+'</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr>';
+ 				 oTable.fnAddTr($(row)[0]);
+ 				 refreshTable("porfolioTableId");
+ 				$("#addporfolioTableInputText").val("");
+
+ 		}
+	});
+	
+
+}
+
+function removeWatchQuote(oTable,quote,portfolioId) {
+	$.ajax({
+		type: "post",
+		url: "@{removeQuoteToWatch()}",
+		dataType : "text json",
+		data: {
+			'id'		: quote,
+			'portfolioId'	: portfolioId
+		},
+		error: function(xhr, ajaxOptions, thrownError){ 
+
+				alert(xhr.responseText);
+		},
+		success: function(data){
+
+			var anSelected = fnGetSelected( oTable );
+			oTable.fnDeleteRow( anSelected[0] );
+		}
+	});
+		
+}
+ </script>

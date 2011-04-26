@@ -1,4 +1,4 @@
-package controllers.financeinfo;
+package services.financeInfo;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -21,7 +21,7 @@ public class PortfolioEntry extends Model {
 	
 	@Required
 	@ManyToOne
-	public Quote quote;
+	public CommunityQuote communityQuote;
     
     public int shareQty;
 
@@ -31,13 +31,13 @@ public class PortfolioEntry extends Model {
     	
     }
     
-    public PortfolioEntry (Quote quote, Portfolio portfolio){
+    public PortfolioEntry (CommunityQuote communityQuote, Portfolio portfolio){
     	this.portfolio = portfolio;
-    	this.quote = quote;
+    	this.communityQuote = communityQuote;
     }
     
     public static List<PortfolioEntry> findByQuote(Quote quote){
-    	return Portfolio.find("select p from PortfolioEntry p where p.quote.id= ?", quote.id).fetch();
+    	return Portfolio.find("select p from PortfolioEntry p where p.communityQuote.quote.id= ?", quote.id).fetch();
 
     }
     
