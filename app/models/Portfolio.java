@@ -15,11 +15,8 @@ public class Portfolio extends Model {
 
 	
     @Required
-	public String name;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    @Required
-    public Community community;
+    @OneToOne
+	public CommunityUser communityUser;
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable 
@@ -46,24 +43,33 @@ public class Portfolio extends Model {
     
     public Date creationDate;
     
-    public Portfolio (){
+    public Portfolio(){
+    	PortfolioStat stats = new PortfolioStat(this, 0, 0);
+    	this.stats = stats;
     	
+    	this.watchQuotes = new ArrayList<Quote>();
+    	this.transactions = new ArrayList<PorfolioTransaction>();
+    	this.portfolioEntries = new ArrayList<PortfolioEntry>();
     }
     
-    public Portfolio (String name, Community community, BigDecimal startingBalance){
-    	this.name = name;
-    	this.community = community;
+    public Portfolio (CommunityUser communityUser, BigDecimal startingBalance){
+    	this();
+    	this.communityUser = communityUser;
     	this.balance = startingBalance;
+    	this.creationDate = new Date();
+
+
+
     }
     
     public String toString()  {
-        return "Name(" + name + ")";
+        return "Name(" + communityUser.user.alias + ")";
     }
 
-	public static Portfolio findByCommunityAndName(String communityName,
-			String name) {
+	public static Portfolio findByCommunityAndAlias(String communityName,
+			String alias) {
 
-		return Portfolio.find("select p from Portfolio p where p.name= ? and p.community.name=? ", name,communityName).first();
+		return Portfolio.find("select p from Portfolio p where p.communityUser.user.alias= ? and p.communityUser.community.name=? ", alias,communityName).first();
 	}
 	
 	/**
@@ -72,14 +78,10 @@ public class Portfolio extends Model {
 	 * @return true if the quote was added, false if symbol already exist in collection.
 	 */
 	public boolean addQuoteToWatch(Quote quoteToWatch) {
-		if(watchQuotes == null){
-			watchQuotes = new ArrayList();
-		}else{
-
-			for (Quote quote : watchQuotes) {
-				if(quote.symbol.equals(quoteToWatch.symbol)){
-					return false;
-				}
+		
+		for (Quote quote : watchQuotes) {
+			if(quote.symbol.equals(quoteToWatch.symbol)){
+				return false;
 			}
 		}
 		
@@ -89,9 +91,7 @@ public class Portfolio extends Model {
 	}
 	
 	public void addTransaction(PorfolioTransaction transaction){
-		if(transactions == null){
-			transactions = new ArrayList();
-		}
+
 		
 		transactions.add(transaction);
 	}
@@ -109,15 +109,13 @@ public class Portfolio extends Model {
 	}
 	
 	public boolean addPortfolioEntry(PortfolioEntry position){
-		if(portfolioEntries == null){
-			portfolioEntries = new ArrayList<PortfolioEntry>();
-		}else{
-			for (PortfolioEntry existingPositions : portfolioEntries) {
-				if(existingPositions.communityQuote.quote.symbol.equals(position.communityQuote.quote.symbol)){
-					return false;
-				}
+
+		for (PortfolioEntry existingPositions : portfolioEntries) {
+			if(existingPositions.communityQuote.quote.symbol.equals(position.communityQuote.quote.symbol)){
+				return false;
 			}
 		}
+		
 		portfolioEntries.add(position);
 		return true;
 	}

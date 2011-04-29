@@ -3,19 +3,26 @@
 # ~~~~
 
 
+#User management
+GET     /myaccount      				UserController.index
 
 
 #Community
 GET     /                               Application.index
 GET     /yaml/{communityName}           Application.yaml
+GET     /communities      				Application.communitylist
+GET     /register      				    Application.register
 GET     /community/{communityName}      CommunityController.index
 
 #Portfolio
-GET     /community/{communityName}/portfolio/{portfolioName}  PortfolioController.index
-GET     /community/{communityName}/edit/{portfolioName}  PortfolioController.edit
+GET     /community/{communityName}/portfolio/{alias}  PortfolioController.index
+GET     /community/{communityName}/myportfolio        PortfolioController.edit
 
 #Quote
 GET     /community/{communityName}/quote/{quoteSymbol}  CommunityQuoteController.index
+
+# Import Secure routes
+*       /                               module:secure
 
 # Import the default CRUD routes
 *			/admin						module:crud

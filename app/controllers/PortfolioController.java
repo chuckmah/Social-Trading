@@ -5,10 +5,12 @@ import java.text.Format;
 import java.util.Iterator;
 import java.util.List;
 
+import models.Community;
 import models.CommunityQuote;
 import models.Portfolio;
 import models.PortfolioEntry;
 import models.Quote;
+import models.User;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -19,15 +21,23 @@ import services.TransactionServices;
 import services.exceptions.SymbolInvalidException;
 import services.financeInfo.FinanceInfo;
 import services.financeInfo.FinanceInfoManager;
+import play.mvc.With;
 
-public class PortfolioController extends Controller {
+@With(Secure.class)
+public class PortfolioController extends BaseController {
 
-	public static void index(String communityName, String portfolioName) {
+	public static void index(String communityName, String alias) {
+		
+    	User user =  (User) renderArgs.get("user");
+    	if(user == null || !user.isMember(communityName)){
+		   CommunityController.checkmembership(communityName);
+    	}
+		
 		Portfolio portfolio = null;
-		if (!StringUtils.isEmpty(portfolioName)
+		if (!StringUtils.isEmpty(alias)
 				&& !StringUtils.isEmpty(communityName)) {
-			portfolio = Portfolio.findByCommunityAndName(communityName,
-					portfolioName);
+			portfolio = Portfolio.findByCommunityAndAlias(communityName,
+					alias);
 		}
 
 		if (portfolio == null) {
@@ -37,13 +47,18 @@ public class PortfolioController extends Controller {
 		render(portfolio);
 	}
 	
-	public static void edit(String communityName, String portfolioName) {
+	public static void edit(String communityName) {
 
+    	User user =  (User) renderArgs.get("user");
+    	if(user == null || !user.isMember(communityName)){
+		   CommunityController.checkmembership(communityName);
+    	}
+		
 		Portfolio portfolio = null;
-		if (!StringUtils.isEmpty(portfolioName)
+		if (!StringUtils.isEmpty(user.alias)
 				&& !StringUtils.isEmpty(communityName)) {
-			portfolio = Portfolio.findByCommunityAndName(communityName,
-					portfolioName);
+			portfolio = Portfolio.findByCommunityAndAlias(communityName,
+					user.alias);
 		}
 
 		if (portfolio == null) {
@@ -56,14 +71,24 @@ public class PortfolioController extends Controller {
 	public static void addTransaction(Long portfolioId, String symbol,
 			String type, String quantity) {
 
+
+		
 		Portfolio portfolio = Portfolio.findById(portfolioId);
 
 		CommunityQuote communityquote = null;
+		
+		Community community = portfolio.communityUser.community;
+	
+    	User user =  (User) renderArgs.get("user");
+    	if(user == null || !user.isMember(community.name)){
+		   CommunityController.checkmembership(community.name);
+    	}
+		
 		try {
-			communityquote = CommunityQuoteServices.retrieveCommunityQuote(symbol,portfolio.community);
+			communityquote = CommunityQuoteServices.retrieveCommunityQuote(symbol,community);
 		} catch (SymbolInvalidException e1) {
 			flash.error("Invalid symbol " + symbol);
-			edit(portfolio.community.name, portfolio.name);
+			edit(community.name);
 		}
 
 		int qty = -1;
@@ -71,7 +96,7 @@ public class PortfolioController extends Controller {
 			qty = Integer.parseInt(quantity);
 		} catch (NumberFormatException e) {
 			flash.error("Wrong quantiy " + quantity);
-			edit(portfolio.community.name, portfolio.name);
+			edit(community.name);
 		}
 
 		BigDecimal price = communityquote.quote.marketPrice;
@@ -91,7 +116,7 @@ public class PortfolioController extends Controller {
 				flash.error("Wrong quantity (" + quantity
 						+ ") the max quantiy you can buy is (" + maxBuy
 						+ ") at actual price of " + price + " $");
-				edit(portfolio.community.name, portfolio.name);
+				edit(community.name);
 			}
 
 		} else if (type.equals("Sell")) {
@@ -100,7 +125,7 @@ public class PortfolioController extends Controller {
 			if (porfioEntry == null) {
 				flash.error("Your portfolio do not contain any positions with symbol: "
 						+ communityquote.quote.symbol);
-				edit(portfolio.community.name, portfolio.name);
+				edit(community.name);
 			} else {
 				int shareQty = porfioEntry.shareQty;
 				if (qty > 0 && qty <= shareQty) {
@@ -113,16 +138,18 @@ public class PortfolioController extends Controller {
 					flash.error("Wrong quantity (" + quantity
 							+ ") the maximum quantiy you can sell is ("
 							+ shareQty + ")");
-					edit(portfolio.community.name, portfolio.name);
+					edit(community.name);
 				}
 			}
 		}
 
-		edit(portfolio.community.name, portfolio.name);
+		edit(community.name);
 	}
 
 	public static void addQuoteToWatch(String symbol, Long portfolioId) {
 
+
+		
 		Quote quoteToWatch = null;
 
 		try {

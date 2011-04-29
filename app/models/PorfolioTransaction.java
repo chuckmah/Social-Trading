@@ -21,8 +21,6 @@ public class PorfolioTransaction extends Model {
 	@ManyToOne
 	public CommunityQuote communityQuote;
 	
-
-	
 	@Required
 	public int qty;
 	

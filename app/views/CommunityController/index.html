@@ -1,5 +1,6 @@
-#{extends 'main.html' /} #{set title:'Social Trading' /} #{set
-'moreScripts'}
+#{extends 'main.html' /} 
+#{set title:'TradingCommunities - Community' /}
+#{set 'moreScripts'}
 <script src="@{'/public/javascripts/jquery.yql.js'}"
 	type="text/javascript" charset="utf-8"></script>
 <script src="@{'/public/javascripts/jquery.dataTables.js'}"
@@ -13,7 +14,9 @@
 	href="@{'/public/stylesheets/portfolioTable.css'}">
 #{/set}
 
-<h1>${community.name} trading community</h1>
+#{menu community.name /}
+
+<h1>${community.name}</h1>
 
 #{set 'moreStyles'}
 <link rel="stylesheet" type="text/css" media="screen"
@@ -30,7 +33,7 @@
 <table class='porfolioTable' id='porfolioStatsTableId'>
 	<thead>
 		<tr>
-			<th>Porfolio Name</th>
+			<th>User</th>
 			<th>stocks quantity</th>
 			<th>total of transactions</th>
 			<th>Total value ($)</th>
@@ -40,16 +43,17 @@
 	</thead>
 	<tbody>
 
-		#{list items:community.portfolios, as:'portfolio'}
-		<tr porfolioId='${portfolio.id}'>
+		#{list items:community.communityUsers, as:'communityUser'}
+		
+		<tr porfolioId='${communityUser.portfolio.id}'>
 			<td><a
-				href="/community/${community.name}/portfolio/${portfolio.name}">${portfolio.name}</a>
+				href="/community/${community.name}/portfolio/${communityUser.user.alias}">${communityUser.user.alias}</a>
 			</td>
-			<td>${portfolio.stats.entriesTotal}</td>
-			<td>${portfolio.stats.transactionTotal}</td>
-			<td>${portfolio.stats.marketValue}</td>
-			<td>${portfolio.stats.marketValueChange}</td>
-			<td>${portfolio.creationDate}</td>
+			<td>${communityUser.portfolio.stats.entriesTotal}</td>
+			<td>${communityUser.portfolio.stats.transactionTotal}</td>
+			<td>${communityUser.portfolio.stats.marketValue}</td>
+			<td>${communityUser.portfolio.stats.marketValueChange}</td>
+			<td>${communityUser.portfolio.creationDate}</td>
 		</tr>
 		#{/list}
 

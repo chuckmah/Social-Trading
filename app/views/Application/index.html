@@ -1,15 +1,12 @@
 #{extends 'main.html' /}
-#{set title:'Social Trading' /}
+#{set title:'TradingCommunities' /}
 
 
-<h2>Social Trading</h2>
 
-<p>please select a community :</p>
 
-#{list items:communities, as:'community'}
-<li><a href="./community/${community.name}">${community.name}</a>&nbsp;&nbsp;/&nbsp;&nbsp;<a href="./yaml/${community.name}">Dump YAML</a></li>
-#{/list}
+<br>
+<br>
+<a href="./communities">Communities</a>
 
-<br/>
-<a href="./admin">Go to administration</a>
+
  

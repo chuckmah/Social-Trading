@@ -1,4 +1,4 @@
-package webapp;
+package jobs;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -27,8 +27,7 @@ public class Bootsrap extends Job {
         if(Community.count() == 0) {
             String fileName = "data.yml";
             Fixtures.load(fileName);
-            
-            
+ 
             
         }
         

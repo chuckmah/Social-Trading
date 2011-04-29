@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import models.Community;
+import models.CommunityUser;
 import models.Portfolio;
 import models.PortfolioEntry;
 import models.PortfolioStat;
@@ -14,18 +15,14 @@ public class PortofolioStatServices {
 	
 	
 	public static void updateCommunityStat(Community community){
-		List<Portfolio> portfolios = community.portfolios;
+		List<CommunityUser> communityUsers = community.communityUsers;
 		
 		
-		for (Portfolio portfolio : portfolios) {
+		for (CommunityUser communityUser : communityUsers) {
 			
-			
+			Portfolio portfolio = communityUser.portfolio;
 			PortfolioStat stats = portfolio.stats;
-			if(stats == null){
-				stats = new PortfolioStat();
-				stats.portfolio = portfolio;
-				portfolio.stats = stats;
-			}
+
 			
 			PortofolioStatServices.updateStat(stats);
 			
@@ -34,7 +31,7 @@ public class PortofolioStatServices {
 		}
 	}
 	
-	private static void updateStat(PortfolioStat stats) {
+	public static void updateStat(PortfolioStat stats) {
 		
 		Portfolio portfolio = stats.portfolio;
 	
@@ -60,7 +57,7 @@ public class PortofolioStatServices {
 		
 		stats.marketValue = marketValue;
 		
-		BigDecimal 	startingBalance =	portfolio.community.startingBalance;
+		BigDecimal 	startingBalance =	portfolio.communityUser.community.startingBalance;
 		
 		//calculate change
 		BigDecimal change = (marketValue.subtract(startingBalance)).divide(startingBalance, 4, RoundingMode.HALF_UP);

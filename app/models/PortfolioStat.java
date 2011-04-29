@@ -11,6 +11,8 @@ import play.db.jpa.Model;
 @Entity
 public class PortfolioStat extends Model {
 
+
+
 	@OneToOne
 	public Portfolio portfolio;
 	
@@ -29,4 +31,11 @@ public class PortfolioStat extends Model {
 	public Integer entriesTotal;
 	
 	public Integer transactionTotal;
+	
+	public PortfolioStat(Portfolio portfolio, Integer entriesTotal, Integer transactionTotal) {
+		this.portfolio = portfolio;
+		this.entriesTotal = entriesTotal;
+		this.transactionTotal = transactionTotal;
+
+	}
 }

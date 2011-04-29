@@ -3,13 +3,21 @@ package controllers;
 import org.apache.commons.lang.StringUtils;
 
 import play.mvc.Controller;
+import play.mvc.With;
 
 import models.Community;
 import models.CommunityQuote;
+import models.User;
 
-public class CommunityQuoteController extends Controller{
+@With(Secure.class)
+public class CommunityQuoteController extends BaseController{
 
 	public static void index(String communityName, String quoteSymbol) {
+		
+    	User user =  (User) renderArgs.get("user");
+    	if(user == null || !user.isMember(communityName)){
+		   CommunityController.checkmembership(communityName);
+    	}
 		
     	Community community = null ;
     	if (!StringUtils.isEmpty(communityName)){

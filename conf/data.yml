@@ -1,8 +1,48 @@
+# Users
+
+User(admin):
+    email:          choc_mah@hotmail.com
+    password:       G1q1q9!
+    fullname:       Charles Maheu
+    alias:          Chuck
+    isAdmin:        true
+
+User(testuser_a):
+    email:          testuser_a@test.com
+    password:       "secret"
+    fullname:       User TestA
+    alias:          testA
+    isAdmin:        false
+
+User(testuser_b):
+    email:          testuser_b@test.com
+    password:       "secret"
+    fullname:       User TestB
+    alias:          testB
+    isAdmin:        false
+
+# Communities
 
 Community(test):
  name: "test"
  startingBalance: 10000
 
+Community(test2):
+ name: "test2"
+ startingBalance: 10000
+
+
+# Community Users
+
+CommunityUser(testuser_a_communityUser):
+ community: test
+ user: testuser_a
+ 
+CommunityUser(testuser_b_communityUser):
+ community: test
+ user: testuser_b
+ 
+  
 #Quotes
 
 Quote(goog):
@@ -64,7 +104,7 @@ CommunityQuote(test_nlr):
  
 Portfolio(testuser_a_portfolio):
  name: "testuser_a"
- community : test
+ communityUser : testuser_a_communityUser
  balance: 9650
  creationDate: 2011-04-19
  watchQuotes: [goog,cmk_to]
@@ -88,10 +128,11 @@ PorfolioTransaction(testuser_a_transaction1):
 
 Portfolio(testuser_b_portfolio):
  name: "testuser_b"
- community : test
+ communityUser : testuser_b_communityUser
  balance: 178
  creationDate: 2011-04-19
  watchQuotes: [yhoo, nlr,intl,ort-a_v,tsla]
+
  
 PortfolioEntry(testuser_b_entry1):
  portfolio: testuser_b_portfolio
@@ -120,3 +161,5 @@ PorfolioTransaction(testuser_b_transaction2):
  executionDate: 2011-04-19T18:09:25.771Z
  communityQuote: test_nlr
  type: "Buy" 
+ 
+ 

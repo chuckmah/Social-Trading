@@ -24,7 +24,7 @@ public class Community extends Model{
 	public BigDecimal startingBalance;
 	
     @OneToMany(cascade=CascadeType.ALL, mappedBy="community")
-	public List<Portfolio> portfolios;
+	public List<CommunityUser>  communityUsers;
 	
     public Date lastUpdate;
     

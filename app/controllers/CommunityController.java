@@ -12,27 +12,76 @@ import org.apache.commons.lang.StringUtils;
 
 import models.*;
 
-public class CommunityController extends Controller {
+@With(Secure.class)
+public class CommunityController extends BaseController {
 
     public static void index(String communityName) {
+    	
+	    	User user =  (User) renderArgs.get("user");
+	    	if(user == null || !user.isMember(communityName)){
+			    checkmembership(communityName);
+	    	}
+
+        	Community community = null ;
+        	if (!StringUtils.isEmpty(communityName)){
+        		community =	Community.findByName(communityName);
+        	}
+        	
+        	if(community == null){
+        		error("Community not found");
+        	}
+        	
+        	render(community);
+ 			
+    }
+
+    public static void checkmembership(String communityName) {
+	    	Community community = null ;
+	    	if (!StringUtils.isEmpty(communityName)){
+	    		community =	Community.findByName(communityName);
+	    	}
+	    	
+        	render(community);
+
+    }
+    
+    
+    public static void join(String communityName) {
+    	User user =  (User) renderArgs.get("user");
+    	if(user != null){
+    		if(user.isMember(communityName)){
+    			error("Already a member of this community");
+    		}
+
+     	}
     	
     	Community community = null ;
     	if (!StringUtils.isEmpty(communityName)){
     		community =	Community.findByName(communityName);
     	}
     	
-    	if(community == null){
-    		error("Community not found");
-    	}
+    	CommunityUser communityUser = new CommunityUser();
+    	communityUser.user = user;
+    	communityUser.community = community;
     	
+    	Portfolio portfolio = new Portfolio(communityUser, community.startingBalance);
 
+    	communityUser.portfolio = portfolio;
 
-    	render(community);
-    			
-    }
+    	PortofolioStatServices.updateStat(portfolio.stats);
+    	communityUser.save();
+    	
+    	PortfolioController.edit(communityName);
 
+     }
+    
 
     public static void addComment(String communityName, String comment){
+    	
+    	User user =  (User) renderArgs.get("user");
+    	if(user == null || !user.isMember(communityName)){
+		   CommunityController.checkmembership(communityName);
+    	}
     	
     	Community community = null ;
     	if (!StringUtils.isEmpty(communityName)){

@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'view a quote' /}
+#{set title:'TradingCommunities - view a quote' /}
 
 #{set 'moreScripts'} 
 <script src="@{'/public/javascripts/jquery.yql.js'}" type="text/javascript" charset="utf-8"></script>
@@ -12,11 +12,9 @@
 <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/portfolioTable.css'}">
 #{/set} 
 
+#{menu communityQuote.community.name /}
 
 <h2>Quote ${communityQuote.quote.symbol}</h2>
-
-<a href="/community/${communityQuote.community.name}"> << back to ${communityQuote.community.name}</a>
-<br/>
 
 
 <h3>Stock info</h3>
@@ -28,7 +26,7 @@
 <table class='porfolioTable' id='positionsTableId'>
 	<thead>
 		<tr>
-			<th>Porfolio</th>
+			<th>User</th>
 			<th>average price</th>
 			<th># of shares</th>
 		</tr>
@@ -38,7 +36,7 @@
 		#{list items:communityQuote.portfolioEntries, as:'portfolioEntry'}
         <tr symbol='${communityQuote.quote.symbol}' positionId='${portfolioEntry.id}'>
 			<td><a
-				href="/community/${communityQuote.community.name}/portfolio/${portfolioEntry.portfolio.name}">${portfolioEntry.portfolio.name}</a>
+				href="/community/${communityQuote.community.name}/portfolio/${portfolioEntry.portfolio.communityUser.user.alias}">${portfolioEntry.portfolio.communityUser.user.alias}</a>
 			</td>
 			<td dynamic='averagePrice'>${portfolioEntry.averagePrice}</td>
 			<td dynamic='positionQty'>${portfolioEntry.shareQty}</td>
@@ -58,7 +56,7 @@
 	<th>Quantity</th>
 	<th>unit price</th>
 	<th>total price</th>
-	<th>Porfolio</th>
+	<th>User</th>
 	</tr>
 </thead>
 <tbody>
@@ -70,7 +68,7 @@
 	<td>${transaction.unitPrice}</td>
 	<td>${transaction.getAmount()}</td>
 	<td><a
-				href="/community/${transaction.communityQuote.community.name}/portfolio/${transaction.portfolio.name}">${transaction.portfolio.name}</a>
+				href="/community/${transaction.communityQuote.community.name}/portfolio/${transaction.portfolio.communityUser.user.alias}">${transaction.portfolio.communityUser.user.alias}</a>
 	</td>
 </tr>
 #{/list}

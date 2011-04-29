@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'view a portofolio' /}
+#{set title:'TradingCommunities -  Portofolio' /}
 
 #{set 'moreScripts'} 
 <script src="@{'/public/javascripts/jquery.yql.js'}" type="text/javascript" charset="utf-8"></script>
@@ -12,13 +12,12 @@
 <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/portfolioTable.css'}">
 #{/set} 
 
-<h2>Portfolio ${portfolio.name}</h2>
+#{menu portfolio.communityUser.community.name /}
 
-<a href="/community/${portfolio.community.name}"> << back to ${portfolio.community.name}</a>
-<br/>
+<h2>${portfolio.communityUser.user.alias} Portfolio</h2>
 
  
-<h3>Postions</h3>
+<h3>Positions</h3>
 <p>Remaining cash  : <label id="remainingCashLabelId">${portfolio.balance}$</label></p>
 <p>Stock Value : <label id="porfolioWorthLabelId"></label></p>
 <table class='porfolioTable' id='positionsTableId'>

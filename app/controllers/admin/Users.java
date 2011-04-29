@@ -1,15 +1,14 @@
 package controllers.admin;
 
-
 import play.mvc.With;
-import models.Portfolio;
+import models.User;
 import controllers.CRUD;
-import controllers.Check;
 import controllers.Secure;
+import controllers.Check;
 
-@CRUD.For(Portfolio.class)
+@CRUD.For(User.class)
 @With(Secure.class)
 @Check("admin")
-public class Portfolios extends CRUD {
+public class Users extends CRUD{
 
 }

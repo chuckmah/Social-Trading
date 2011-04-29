@@ -11,6 +11,38 @@
         #{get 'moreScripts' /}
     </head>
     <body>
-        #{doLayout /}
+    <div id="header">
+            <div id="logo">
+                TradingCommunities
+            </div>
+            <div id="tools">
+            	 #{if user == null}
+                 <a href="@{Secure.login()}">Log in</a>
+                 #{/if}
+                 #{else}
+                 	Connected as ${user.alias} |
+                  <a href="@{UserController.index()}">My account</a> | 
+                    #{secure.check 'admin'}
+                    <a href="@{CRUD.index()}">Admin</a> | 
+                    #{/secure.check}
+                  <a href="@{Secure.logout()}">Logout</a>
+                 #{/else}
+            </div>
+    </div>
+        <div id="main">
+        #{if user == null}
+			<p> Welcome to Trading Communities , please note that we are currently under construction, if your part of the beta, you may <a href="@{Secure.login()}">Log in</a> or <a href="@{Application.register()}">Register</a></p>
+		#{/if}
+		#{else}
+       		 #{doLayout /}
+        #{/else}
+        </div>
+        <br>
+    	<br>
+    	 <div id="footer">
+
+			Contact me <a href="mailto:choc_mah@hotmail.com">here.</a> 
+
+       	</div>
     </body>
 </html>
