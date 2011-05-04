@@ -26,8 +26,16 @@ public class QuoteServices {
 		String[] symbols = new String[quotes.size()];
 
 		for (int i = 0; i < quotes.size(); i++) {
-			Quote quote = quotes.get(i);
-			symbols[i] = quote.symbol;
+			
+			if(quotes.get(i) instanceof Quote){
+				Quote quote = quotes.get(i);
+				symbols[i] = quote.symbol;
+			}else{
+				Logger.error("unknow quote element");
+				return;
+			}
+			
+
 		}
 
 		Map<String, QuoteInfo> quoteInfos = FinanceInfoManager

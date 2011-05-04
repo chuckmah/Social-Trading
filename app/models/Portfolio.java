@@ -63,13 +63,13 @@ public class Portfolio extends Model {
     }
     
     public String toString()  {
-        return "Name(" + communityUser.user.alias + ")";
+        return "Name(" + communityUser.user.userName + ")";
     }
 
-	public static Portfolio findByCommunityAndAlias(String communityName,
+	public static Portfolio findByCommunityAndUserName(String communityName,
 			String alias) {
 
-		return Portfolio.find("select p from Portfolio p where p.communityUser.user.alias= ? and p.communityUser.community.name=? ", alias,communityName).first();
+		return Portfolio.find("select p from Portfolio p where p.communityUser.user.userName= ? and p.communityUser.community.name=? ", alias,communityName).first();
 	}
 	
 	/**

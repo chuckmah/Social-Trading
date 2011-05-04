@@ -9,9 +9,8 @@ public class UserController extends BaseController {
 
 	
 	public static void index() {
+
 		render();
 	}
 	
-	
-
 }

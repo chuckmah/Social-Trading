@@ -20,9 +20,11 @@ public class User extends Model {
     @Required
     public String password;
     
-    public String fullname;
+    @Required
+    public String name;
     
-    public String alias;
+    @Required
+    public String userName;
     
     public boolean isAdmin;
     
@@ -30,11 +32,12 @@ public class User extends Model {
     @OneToMany(cascade=CascadeType.ALL, mappedBy="user")
 	public List<CommunityUser> communityUsers;
     
-    public User(String email, String password, String fullname, String alias) {
+    public User(String email, String password, String fullname, String userName) {
         this.email = email;
         this.password = password;
-        this.fullname = fullname;
-        this.alias = alias;
+        this.name = fullname;
+        this.userName = userName;
+        this.isAdmin = false;
     }
     
 

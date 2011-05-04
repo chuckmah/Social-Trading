@@ -13,14 +13,14 @@
     <body>
     <div id="header">
             <div id="logo">
-                TradingCommunities
+                TradingPeers.com
             </div>
             <div id="tools">
             	 #{if user == null}
-                 <a href="@{Secure.login()}">Log in</a>
+               <!--   <a href="@{Secure.login()}">Log in</a> -->
                  #{/if}
                  #{else}
-                 	Connected as ${user.alias} |
+                 	Connected as ${user.userName} |
                   <a href="@{UserController.index()}">My account</a> | 
                     #{secure.check 'admin'}
                     <a href="@{CRUD.index()}">Admin</a> | 
@@ -30,12 +30,7 @@
             </div>
     </div>
         <div id="main">
-        #{if user == null}
-			<p> Welcome to Trading Communities , please note that we are currently under construction, if your part of the beta, you may <a href="@{Secure.login()}">Log in</a> or <a href="@{Application.register()}">Register</a></p>
-		#{/if}
-		#{else}
        		 #{doLayout /}
-        #{/else}
         </div>
         <br>
     	<br>

@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'TradingCommunities -  My Account' /}
+#{set title:'TradingPeers -  My Account' /}
 
 #{set 'moreScripts'}
 <script src="@{'/public/javascripts/jquery.yql.js'}" type="text/javascript" charset="utf-8"></script>
@@ -14,8 +14,8 @@
 
 <h3> My info </h3>
 <p>email : ${user.email}</p>
-<p>fullname : ${user.fullname}</p>
-<p>alias: ${user.alias}</p>
+<p>fullname : ${user.name}</p>
+<p>alias: ${user.userName}</p>
 
 <br>
 <h3> My Communities </h3>

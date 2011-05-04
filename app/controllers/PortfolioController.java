@@ -26,18 +26,15 @@ import play.mvc.With;
 @With(Secure.class)
 public class PortfolioController extends BaseController {
 
-	public static void index(String communityName, String alias) {
+	public static void index(String communityName, String userName) {
 		
-    	User user =  (User) renderArgs.get("user");
-    	if(user == null || !user.isMember(communityName)){
-		   CommunityController.checkmembership(communityName);
-    	}
+	   	checkmembership(communityName);
 		
 		Portfolio portfolio = null;
-		if (!StringUtils.isEmpty(alias)
+		if (!StringUtils.isEmpty(userName)
 				&& !StringUtils.isEmpty(communityName)) {
-			portfolio = Portfolio.findByCommunityAndAlias(communityName,
-					alias);
+			portfolio = Portfolio.findByCommunityAndUserName(communityName,
+					userName);
 		}
 
 		if (portfolio == null) {
@@ -49,16 +46,15 @@ public class PortfolioController extends BaseController {
 	
 	public static void edit(String communityName) {
 
-    	User user =  (User) renderArgs.get("user");
-    	if(user == null || !user.isMember(communityName)){
-		   CommunityController.checkmembership(communityName);
-    	}
+	   	checkmembership(communityName);
 		
+	    User user =  (User) renderArgs.get("user");
+	   	
 		Portfolio portfolio = null;
-		if (!StringUtils.isEmpty(user.alias)
+		if (!StringUtils.isEmpty(user.userName)
 				&& !StringUtils.isEmpty(communityName)) {
-			portfolio = Portfolio.findByCommunityAndAlias(communityName,
-					user.alias);
+			portfolio = Portfolio.findByCommunityAndUserName(communityName,
+					user.userName);
 		}
 
 		if (portfolio == null) {

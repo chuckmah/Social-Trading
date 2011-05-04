@@ -3,22 +3,22 @@
 User(admin):
     email:          choc_mah@hotmail.com
     password:       G1q1q9!
-    fullname:       Charles Maheu
-    alias:          Chuck
+    name:       Charles Maheu
+    userName:          Chuck
     isAdmin:        true
 
 User(testuser_a):
     email:          testuser_a@test.com
     password:       "secret"
-    fullname:       User TestA
-    alias:          testA
+    name:       User TestA
+    userName:          testA
     isAdmin:        false
 
 User(testuser_b):
     email:          testuser_b@test.com
     password:       "secret"
-    fullname:       User TestB
-    alias:          testB
+    name:           User TestB
+    userName:       testB
     isAdmin:        false
 
 # Communities

@@ -9,16 +9,15 @@ import models.Community;
 import models.CommunityQuote;
 import models.User;
 
+
 @With(Secure.class)
 public class CommunityQuoteController extends BaseController{
 
 	public static void index(String communityName, String quoteSymbol) {
 		
-    	User user =  (User) renderArgs.get("user");
-    	if(user == null || !user.isMember(communityName)){
-		   CommunityController.checkmembership(communityName);
-    	}
-		
+
+    	checkmembership(communityName);
+    	
     	Community community = null ;
     	if (!StringUtils.isEmpty(communityName)){
     		community =	Community.findByName(communityName);
