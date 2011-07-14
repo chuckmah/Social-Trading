@@ -1,0 +1,56 @@
+#{extends 'main.html' /}
+#{set title:'TradingPeers - Register' /}
+
+#{set 'moreStyles'}
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/secure.css'}" />
+#{/set} 
+
+<div id="login">
+
+
+<a href="#">Register with facebook</a>
+
+<br/>
+<br/>
+or
+<br/>
+<br/>
+
+#{form @saveUser()}
+  
+    #{field 'user.userName'}
+        <p class="${field.errorClass}">
+            <strong>Username:</strong> <input type="text" name="${field.name}" size="16" value="${user?.userName}"> *
+            <span class="error2">${field.error}</span>
+        </p>
+    #{/field}
+    #{field 'user.name'}
+        <p class="${field.errorClass}">
+            <strong>Real name:</strong> <input type="text" name="${field.name}" size="16" value="${user?.name}"> *
+            <span class="error2">${field.error}</span>
+        </p>
+    #{/field}
+    #{field 'user.email'}
+        <p class="${field.errorClass}">
+            <strong>Email:</strong> <input type="text" name="${field.name}" size="16" value="${user?.email}"> *
+            <span class="error2">${field.error}</span>
+        </p>
+    #{/field}
+    #{field 'user.password'}
+        <p class="${field.errorClass}">
+            <strong>Password:</strong> <input type="password" name="${field.name}" size="16" value="${user?.password}"> *
+            <span class="error2">${field.error}</span>
+        </p>
+    #{/field}
+    #{field 'verifyPassword'}
+        <p class="${field.errorClass}">
+            <strong>Verify password:</strong> <input type="password" name="${field.name}" size="16" value="${verifyPassword}"> *
+            <span class="error2">${field.error}</span>
+        </p>
+    #{/field}    
+    <p class="buttons">
+        <input type="submit" value="Register"> 
+    </p>
+    
+#{/form}
+</div>
