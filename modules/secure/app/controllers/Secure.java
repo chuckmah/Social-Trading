@@ -12,7 +12,7 @@ import play.utils.*;
 
 public class Secure extends Controller {
 
-    @Before(unless={"register","login","saveUser", "authenticate", "logout"})
+    @Before(unless={"register","login","saveUser", "authenticate", "logout", "fblogin"})
     static void checkAccess() throws Throwable {
         // Authent
         if(!session.contains("username")) {
@@ -97,16 +97,21 @@ public class Secure extends Controller {
 		render();
 	}
 	
-    public static OAuth2 FACEBOOK = new OAuth2(
-            "https://graph.facebook.com/oauth/access_token",
-            "https://graph.facebook.com/oauth/authorize",
-            "171067816283919",
-            "68dfc981b62a873f2c4c116f23d79bba"
-    );
-
     
-	public static void facebooklogin(){
+	public static void fblogin(){
 		
+		String username = session.get("username");
+		
+    	try {
+			Security.invoke("authenticate", username, "");
+
+    	
+	        // Redirect to the original URL (or /)
+	        redirectToOriginalURL();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void saveUser(@Valid User user, String verifyPassword) {
@@ -121,7 +126,7 @@ public class Secure extends Controller {
         	Security.invoke("authenticate", user.email, user.password);
 
             // Mark user as connected
-            session.put("username", user);
+            session.put("username", user.email);
             
             // Redirect to the original URL (or /)
             redirectToOriginalURL();

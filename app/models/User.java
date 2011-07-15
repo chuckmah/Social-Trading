@@ -7,8 +7,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.google.gson.JsonObject;
+
+import play.Logger;
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import play.mvc.Scope.Session;
 
 @Entity
 public class User extends Model {
@@ -28,6 +34,7 @@ public class User extends Model {
     
     public boolean isAdmin;
     
+    public boolean fbAuthentication;
     
     @OneToMany(cascade=CascadeType.ALL, mappedBy="user")
 	public List<CommunityUser> communityUsers;
@@ -38,8 +45,16 @@ public class User extends Model {
         this.name = fullname;
         this.userName = userName;
         this.isAdmin = false;
+        this.fbAuthentication = false;
     }
     
+    public User(String email, String fullname, String userName) {
+        this.email = email;
+        this.name = fullname;
+        this.userName = userName;
+        this.isAdmin = false;
+        this.fbAuthentication = true;
+    }
 
     
     public String toString() {
@@ -51,7 +66,30 @@ public class User extends Model {
         return find("byEmailAndPassword", email, password).first();
     }
 
+    public static void facebookOAuthCallback(JsonObject data){
+    		String email = data.get("email").getAsString();
+    		
+    		User user = null;
+    		if(!StringUtils.isEmpty(email)){
+    			user = find("byEmail", email).first();
+    			if(user == null){
+    					//get the username if not present use the first_name for the username
+    	    		 	String userName = data.get("username").getAsString();
+    	    		 	if(StringUtils.isEmpty(userName)){
+    	    		 		userName  = data.get("first_name").getAsString();
+    	    		 	}
+    		    	    String name = data.get("name").getAsString();
+    		    	    
+    		    	    user = new User(email,name,userName);
+    		            user.create();
+    			}
+    		}
+    		
+            // Mark user as connected
+    		Session.current().put("username", user);
 
+    		
+    }
 
 	public boolean isMember(String communityName) {
 		
