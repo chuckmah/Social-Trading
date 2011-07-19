@@ -86,7 +86,9 @@ public class User extends Model {
     		}
     		
             // Mark user as connected
+
     		Session.current().put("fbuseremail", user.email);
+
 
     		
     }

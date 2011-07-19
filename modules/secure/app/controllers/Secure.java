@@ -100,6 +100,7 @@ public class Secure extends Controller {
     
 	public static void fblogin(){
 		
+
 		String userEmail = session.get("fbuseremail");
 		
     	try {
@@ -107,6 +108,7 @@ public class Secure extends Controller {
 
             // Mark user as connected
             session.put("username", userEmail);
+
     	
 	        // Redirect to the original URL (or /)
 	        redirectToOriginalURL();
