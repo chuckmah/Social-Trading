@@ -5,5 +5,6 @@
 GET			/login			Secure.login
 POST        /login          Secure.authenticate
 GET         /logout         Secure.logout
+GET         /fblogin        Secure.fblogin
 GET         /register       Secure.register
 POST        /register       Secure.saveUser

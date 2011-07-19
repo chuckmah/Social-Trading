@@ -21,7 +21,8 @@ import controllers.Secure.Security;
 public class Application extends BaseController {
 
     public static void index() {
-        render();
+	   	List communities = Community.find("order by id desc").fetch();
+	    render(communities);
     }
     
     public static void communitylist() {
