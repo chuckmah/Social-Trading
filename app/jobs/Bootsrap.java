@@ -26,11 +26,11 @@ public class Bootsrap extends Job {
         // Load test data if the database is empty
         if(Community.count() == 0) {
             String fileName = "data.yml";
-            Fixtures.load(fileName);
+
  
-            
+            Fixtures.loadModels(fileName);
         }
         
-    	CommunityServices.updateCommunities();
+    	//CommunityServices.updateCommunities();
     }
 }

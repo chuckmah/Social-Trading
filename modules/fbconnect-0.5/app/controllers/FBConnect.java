@@ -36,7 +36,7 @@ public class FBConnect extends Controller {
         if(code != null){
             String authUrl = fbsession.getAuthUrl(code);
             WSUrlFetch ws = new WSUrlFetch();
-            String response = ws.newRequest(authUrl,"utf-8").get().getString();
+            String response = ws.newRequest(authUrl).get().getString();
             String accessToken = null;
             Integer expires = null;
             String[] pairs = response.split("&");
@@ -59,7 +59,7 @@ public class FBConnect extends Controller {
                     Method method = model.getMethod("facebookOAuthCallback", new Class[] { JsonObject.class });
                     if(Modifier.isStatic(method.getModifiers())){
                         String uri = "https://graph.facebook.com/me?access_token="+WS.encode(accessToken);
-                        JsonObject jsonData = ws.newRequest(uri,"utf-8").get().getJson().getAsJsonObject();
+                        JsonObject jsonData = ws.newRequest(uri).get().getJson().getAsJsonObject();
                         jsonData.add("accessToken", new JsonPrimitive(accessToken));
                         jsonData.add("expires", new JsonPrimitive(expires));
                         method.invoke(null, jsonData);
